@@ -1,4 +1,4 @@
-# RCNB.Python [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e69b178927b74f5983ba22d403b39551)](https://www.codacy.com/manual/chr233/RCNB.python?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=chr233/RCNB.python&amp;utm_campaign=Badge_Grade)
+# RCNB.Python [![Codacy Badge][codacy_b]][codacy] [![PyPI][pypi_v_b]][pypi]
 
 The world is based on RC. Thus, *everything* can be encoded into RCNB.
 
@@ -34,3 +34,8 @@ print(encoder.encode("Who NB?"))
 print(encoder.decode("ȐĉņþƦȻƝƃŔć"))
 # RCNB!
 ```
+
+  [codacy_b]: https://app.codacy.com/project/badge/Grade/e69b178927b74f5983ba22d403b39551
+  [codacy]: https://www.codacy.com/manual/chr233/RCNB.python?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=chr233/RCNB.python&amp;utm_campaign=Badge_Grade
+  [pypi_v_b]: https://img.shields.io/pypi/v/rcnb
+  [pypi]: https://pypi.org/project/rcnb/
