@@ -3,7 +3,7 @@
 # @Author       : Chr_
 # @Date         : 2020-08-25 18:55:16
 # @LastEditors  : Chr_
-# @LastEditTime : 2020-08-26 22:53:00
+# @LastEditTime : 2020-08-26 22:58:23
 # @Description  : RCNB-CORE
 '''
 
@@ -124,17 +124,18 @@ class RCNB():
             r.append(self.__encodeByte(bs[-1]))
         return(''.join(r))
 
-    def encode(self, s: str) -> str:
+    def encode(self, s: str, encoding: str = 'utf-8') -> str:
         '''
         文本编码
 
         参数:
             s: 明文
+            encoding: 字符串编码方式
         返回:
             str: 密文
         '''
         assert isinstance(s, str), 's must be str'
-        bs = s.encode('utf-8')
+        bs = s.encode(encoding)
         r = self.encodeBytes(bs)
         return(r)
 
@@ -162,10 +163,11 @@ class RCNB():
 
     def decode(self, s: str, encoding: str = 'utf-8') -> str:
         '''
-        文本解码
+        解码为文本
 
         参数:
             s: 密文
+            encoding: 字符串编码方式
         返回:
             str: 明文
         '''
@@ -173,6 +175,5 @@ class RCNB():
         try:
             r = self.decodeBytes(s).decode(encoding)
         except UnicodeDecodeError:
-            r = None
             raise ValueError('decode error')
         return (r)
