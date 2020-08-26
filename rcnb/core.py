@@ -3,7 +3,7 @@
 # @Author       : Chr_
 # @Date         : 2020-08-25 18:55:16
 # @LastEditors  : Chr_
-# @LastEditTime : 2020-08-26 15:54:17
+# @LastEditTime : 2020-08-26 22:53:00
 # @Description  : RCNB-CORE
 '''
 
@@ -107,6 +107,23 @@ class RCNB():
         r |= 0x8000 if reverse else 0
         return(r)
 
+    def encodeBytes(self, bs: bytes) -> str:
+        '''
+        字节编码
+
+        参数:
+            bs: 字节数据
+        返回:
+            str: 密文
+        '''
+        r = []
+        l = len(bs) >> 1
+        for i in range(0, l):
+            r.append(self.__encodeShort((bs[i * 2] << 8) | bs[i * 2 + 1]))
+        if(len(bs) & 1 == 1):
+            r.append(self.__encodeByte(bs[-1]))
+        return(''.join(r))
+
     def encode(self, s: str) -> str:
         '''
         文本编码
@@ -118,15 +135,32 @@ class RCNB():
         '''
         assert isinstance(s, str), 's must be str'
         bs = s.encode('utf-8')
-        r = []
-        l = len(bs) // 2
-        for i in range(0, l):
-            r.append(self.__encodeShort((bs[i * 2] << 8) | bs[i * 2 + 1]))
-        if(len(bs) % 2):
-            r.append(self.__encodeByte(bs[-1]))
-        return(''.join(r))
+        r = self.encodeBytes(bs)
+        return(r)
 
-    def decode(self, s: str) -> str:
+    def decodeBytes(self, s: str) -> bytes:
+        '''
+        解码为字节
+
+        参数:
+            s: 密文
+        返回:
+            bytes: 二进制数据
+        '''
+        assert isinstance(s, str), 's must be str'
+        if (len(s) & 1):
+            raise ValueError('invalid length')
+        r = []
+        l = len(s) >> 2
+        for i in range(0, l):
+            value = self.__decodeShort(s[i * 4: i * 4 + 4])
+            r.append(bytes([value >> 8]))
+            r.append(bytes([value & 0xFF]))
+        if((len(s) & 2) == 2):
+            r.append(bytes([self.__decodeByte(s[-2:])]))
+        return (b''.join(r))
+
+    def decode(self, s: str, encoding: str = 'utf-8') -> str:
         '''
         文本解码
 
@@ -136,14 +170,9 @@ class RCNB():
             str: 明文
         '''
         assert isinstance(s, str), 's must be str'
-        if (len(s) & 1):
-            raise ValueError('invalid length')
-        r = []
-        l = len(s) >> 2
-        for i in range(0, l):
-            value = self.__decodeShort(s[i * 4: i * 4 + 4])
-            r.append(chr(value >> 8))
-            r.append(chr(value & 0xFF))
-        if((len(s) & 2) == 2):
-            r.append(chr(self.__decodeByte(s[-2:])))
-        return (''.join(r))
+        try:
+            r = self.decodeBytes(s).decode(encoding)
+        except UnicodeDecodeError:
+            r = None
+            raise ValueError('decode error')
+        return (r)
