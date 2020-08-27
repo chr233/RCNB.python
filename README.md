@@ -1,4 +1,4 @@
-# RCNB.Python [![Codacy Badge][codacy_b]][codacy] [![PyPI][pypi_v_b]][pypi]
+# RCNB.Python [![Codacy Badge][codacy_b]][codacy] [![PyPI][pypi_v_b]][pypi] [![License][license_b]][License]
 
 The world is based on RC. Thus, *everything* can be encoded into RCNB.
 
@@ -39,3 +39,5 @@ print(encoder.decode("ȐĉņþƦȻƝƃŔć"))
   [codacy]: https://www.codacy.com/manual/chr233/RCNB.python?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=chr233/RCNB.python&amp;utm_campaign=Badge_Grade
   [pypi_v_b]: https://img.shields.io/pypi/v/rcnb
   [pypi]: https://pypi.org/project/rcnb/
+  [license]: https://github.com/chr233/RCNB.python/blob/master/license
+  [license_b]: https://img.shields.io/github/license/chr233/RCNB.python
