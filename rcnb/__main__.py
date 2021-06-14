@@ -34,7 +34,4 @@ def main():
     print(func(text,encoding=encoding))
 
 main()
-    
-
-
 
