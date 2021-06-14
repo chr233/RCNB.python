@@ -24,14 +24,12 @@ RCNB is available in various languages: **Python** [JavaScript](https://github.c
 ## Usage
 
 ```python
-from rcnb import RCNB
+import rcnb
 
-encoder = RCNB()
-
-print(encoder.encode("Who NB?"))
+print(rcnb.encode("Who NB?"))
 # ȐȼŃƅȓčƞÞƦȻƝƃŖć
 
-print(encoder.decode("ȐĉņþƦȻƝƃŔć"))
+print(rcnb.decode("ȐĉņþƦȻƝƃŔć"))
 # RCNB!
 ```
 
