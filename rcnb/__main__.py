@@ -13,9 +13,9 @@ def main():
         -e: 编码 (默认)
         encoding 默认为 utf-8""")
         sys.exit(2)
-    
+
     func = encode
-    for o, a in opts:
+    for o, _ in opts:
         if o == '-e': func = encode
         if o == '-d': func = decode
         if o == '-u': func = decode
