@@ -28,13 +28,8 @@ class RCNB():
     __snb = __sn * __sb
     __scnb = __sc * __snb
 
-    def __init__(self):
-        '''
-        初始化RCNB类
-        '''
-        super().__init__()
-
-    def __encodeByte(self, i: int) -> str:
+    @classmethod
+    def __encodeByte(cls, i: int) -> str:
         '''
         单字节编码
         '''
@@ -42,72 +37,74 @@ class RCNB():
             raise ValueError('rc/nb overflow')
         if (i > 0x7F):
             i &= 0x7F
-            r = f'{self.__cn[i // self.__sb]}{self.__cb[i % self.__sb]}'
+            r = f'{cls.__cn[i // cls.__sb]}{cls.__cb[i % cls.__sb]}'
         else:
-            r = f'{self.__cr[i // self.__sc]}{self.__cc[i % self.__sc]}'
+            r = f'{cls.__cr[i // cls.__sc]}{cls.__cc[i % cls.__sc]}'
         return(r)
 
-    def __encodeShort(self, i: int) -> str:
+    @classmethod
+    def __encodeShort(cls, i: int) -> str:
         '''
         双字节编码
         '''
         if (i > 0xFFFF):
             raise ValueError('rc/nb overflow')
         reverse = False
-        if(i > 0x7FFF):
+        if (i > 0x7FFF):
             reverse = True
             i &= 0x7FFF
-        if(not reverse):
-            r = [self.__cr[i // self.__scnb], self.__cc[i % self.__scnb // self.__snb],
-                 self.__cn[i % self.__snb // self.__sb], self.__cb[i % self.__sb]]
-        else:
-            r = [self.__cn[i % self.__snb // self.__sb], self.__cb[i % self.__sb],
-                 self.__cr[i // self.__scnb], self.__cc[i % self.__scnb // self.__snb]]
+        r= (cls.__cr[i // cls.__scnb], cls.__cc[i % cls.__scnb // cls.__snb],
+            cls.__cn[i % cls.__snb // cls.__sb], cls.__cb[i % cls.__sb])
+        if (reverse):
+            r = r[2],r[3],r[0],r[1]
         return(''.join(r))
 
-    def __decodeByte(self, s: str) -> int:
+    @classmethod
+    def __decodeByte(cls, s: str) -> int:
         '''
         解码成单字节
         '''
         try:
-            id1 = self.__cr.index(s[0])
-            id2 = self.__cc.index(s[1])
+            id1 = cls.__cr.index(s[0])
+            id2 = cls.__cc.index(s[1])
             nb = False
         except ValueError:
             try:
-                id1 = self.__cn.index(s[0])
-                id2 = self.__cb.index(s[1])
+                id1 = cls.__cn.index(s[0])
+                id2 = cls.__cb.index(s[1])
                 nb = True
             except ValueError:
                 raise ValueError('not rc/nb')
-        r = (id1 * self.__sb + id2) if nb else (id1 * self.__sc + id2)
-        if(r > 0x7F):
+        r = (id1 * cls.__sb + id2) if nb else (id1 * cls.__sc + id2)
+        if (r > 0x7F):
             raise ValueError('rc/nb overflow')
         r |= 0x80 if nb else 0
         return(r)
 
-    def __decodeShort(self, s: str) -> int:
+    @classmethod
+    def __decodeShort(cls, s: str) -> int:
         '''
         解码成双字节
         '''
-        reverse = s[0] not in self.__cr
+        reverse = s[0] not in cls.__cr
         try:
-            if(not reverse):
-                idx = [self.__cr.index(s[0]), self.__cc.index(s[1]),
-                       self.__cn.index(s[2]), self.__cb.index(s[3])]
+            if (not reverse):
+                idx = [cls.__cr.index(s[0]), cls.__cc.index(s[1]),
+                       cls.__cn.index(s[2]), cls.__cb.index(s[3])]
             else:
-                idx = [self.__cr.index(s[2]), self.__cc.index(s[3]),
-                       self.__cn.index(s[0]), self.__cb.index(s[1])]
+                idx = [cls.__cr.index(s[2]), cls.__cc.index(s[3]),
+                       cls.__cn.index(s[0]), cls.__cb.index(s[1])]
         except ValueError:
             raise ValueError('not rcnb')
-        r = idx[0] * self.__scnb + idx[1] * \
-            self.__snb + idx[2] * self.__sb + idx[3]
+        r = idx[0] * cls.__scnb + idx[1] * \
+            cls.__snb + idx[2] * cls.__sb + idx[3]
         if (r > 0x7FFF):
             raise ValueError('rcnb overflow')
         r |= 0x8000 if reverse else 0
         return(r)
 
-    def encodeBytes(self, bs: bytes) -> str:
+    @classmethod
+    def encodeBytes(cls, bs: bytes) -> str:
         '''
         字节编码
 
@@ -119,12 +116,13 @@ class RCNB():
         r = []
         l = len(bs) >> 1
         for i in range(0, l):
-            r.append(self.__encodeShort((bs[i * 2] << 8) | bs[i * 2 + 1]))
-        if(len(bs) & 1 == 1):
-            r.append(self.__encodeByte(bs[-1]))
+            r.append(cls.__encodeShort((bs[i * 2] << 8) | bs[i * 2 + 1]))
+        if (len(bs) & 1 == 1):
+            r.append(cls.__encodeByte(bs[-1]))
         return(''.join(r))
 
-    def encode(self, s: str, encoding: str = 'utf-8') -> str:
+    @classmethod
+    def encode(cls, s: str, encoding: str = 'utf-8') -> str:
         '''
         文本编码
 
@@ -136,10 +134,11 @@ class RCNB():
         '''
         assert isinstance(s, str), 's must be str'
         bs = s.encode(encoding)
-        r = self.encodeBytes(bs)
+        r = cls.encodeBytes(bs)
         return(r)
 
-    def decodeBytes(self, s: str) -> bytes:
+    @classmethod
+    def decodeBytes(cls, s: str) -> bytes:
         '''
         解码为字节
 
@@ -154,14 +153,15 @@ class RCNB():
         r = []
         l = len(s) >> 2
         for i in range(0, l):
-            value = self.__decodeShort(s[i * 4: i * 4 + 4])
+            value = cls.__decodeShort(s[i * 4: i * 4 + 4])
             r.append(bytes([value >> 8]))
             r.append(bytes([value & 0xFF]))
-        if((len(s) & 2) == 2):
-            r.append(bytes([self.__decodeByte(s[-2:])]))
+        if ((len(s) & 2) == 2):
+            r.append(bytes([cls.__decodeByte(s[-2:])]))
         return (b''.join(r))
 
-    def decode(self, s: str, encoding: str = 'utf-8') -> str:
+    @classmethod
+    def decode(cls, s: str, encoding: str = 'utf-8') -> str:
         '''
         解码为文本
 
@@ -173,7 +173,7 @@ class RCNB():
         '''
         assert isinstance(s, str), 's must be str'
         try:
-            r = self.decodeBytes(s).decode(encoding)
+            r = cls.decodeBytes(s).decode(encoding)
         except UnicodeDecodeError:
             raise ValueError('decode error')
-        return (r)
+        return(r)

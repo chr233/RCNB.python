@@ -9,4 +9,9 @@
 
 from .core import RCNB
 
-__all__ = ['core']
+encode=RCNB.encode
+encodeBytes=RCNB.encodeBytes
+decode=RCNB.decode
+decodeBytes=RCNB.decodeBytes
+
+__all__ = ['core','encode','encodeBytes','decode','decodeBytes']
