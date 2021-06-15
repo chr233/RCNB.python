@@ -3,7 +3,7 @@
 # @Author       : Chr_
 # @Date         : 2020-08-25 18:55:16
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-06-15 23:34:28
+# @LastEditTime : 2021-06-15 23:35:41
 # @Description  : RCNB-CORE
 '''
 
@@ -20,7 +20,7 @@ class RCNB():
             'ň', 'Ɲ', 'ƞ', 'Ñ', 'Ǹ', 'ǹ', 'Ƞ', 'ȵ']
     __cb = ['b', 'B', 'ƀ', 'Ɓ', 'ƃ', 'Ƅ', 'ƅ', 'ß', 'Þ', 'þ']
 
-    __sr = len(__cr)
+    # __sr = len(__cr)
     __sc = len(__cc)
     __sn = len(__cn)
     __sb = len(__cb)
