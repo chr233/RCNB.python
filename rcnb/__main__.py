@@ -1,37 +1,75 @@
-import sys,getopt,os
-from . import encode,decode
+
+'''
+# @Author       : liggest
+# @Date         : 2021-06-15 15:43:00
+# @LastEditors  : Chr_
+# @LastEditTime : 2021-06-15 23:30:13
+# @Description  : 
+'''
+
+import os
+import sys
+import getopt
+from . import encode, decode
+
+usage = f"""
+使用方法: {sys.argv[0]} [-d|-e] [-f] [-u encoding] text
+    -d: 解码
+    -e: 编码 (默认)
+    -f: 把text当做文件路径而不是待加密/解密的字符串
+    -u encoding: 指定编码方式(默认为 utf-8)"""
+
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'deu')
-        #print(opts,args)
+        opts, args = getopt.getopt(sys.argv[1:], 'deu:f')
+        # print(opts,args)
     except getopt.error as msg:
         sys.stdout = sys.stderr
         print(msg)
-        print(f"""使用方法: {sys.argv[0]} [-d|-e|-u] [text|file|-] [encoding]
-        -d, -u: 解码
-        -e: 编码 (默认)
-        encoding 默认为 utf-8""")
+        print(usage)
         sys.exit(2)
 
     func = encode
-    for o, _ in opts:
-        if o == '-e': func = encode
-        if o == '-d': func = decode
-        if o == '-u': func = decode
-    encoding='utf-8'
-    if args and args[0]!='-':
-        if len(args)>1:
-            encoding=args[-1]
-        print(f'encoding:{encoding}')
-        if os.path.isfile(args[0]):
-            with open(args[0],'r',encoding=encoding) as f:
-                text=f.read()
+    encoding = 'utf-8'
+    filemode = False
+
+    for opt, arg in opts:
+        if opt == '-e':
+            func = encode
+        elif opt == '-d':
+            func = decode
+        elif opt == '-u':
+            encoding = arg
+        elif opt == '-f':
+            filemode = True
+
+    if not sys.stdin.isatty():
+        sys.stdin.reconfigure(encoding=encoding)
+        text = sys.stdin.read()
+    elif args:
+        if filemode:
+            try:
+                with open(args[0], 'r', encoding=encoding) as f:
+                    text = f.read()
+            except FileNotFoundError:
+                print('错误: 文件不存在')
+                print(usage)
+                sys.exit(2)
         else:
-            text=args[0]
+            text = ' '.join(args)
     else:
-        text=sys.stdin.read()
-    print(func(text,encoding=encoding))
+        print('错误: 缺少参数')
+        print(usage)
+        sys.exit(2)
+
+    result = func(text, encoding=encoding)
+
+    if sys.stdout.isatty():
+        print(result)
+    else:
+        sys.stdout.reconfigure(encoding=encoding)
+        sys.stdout.write(result)
+
 
 main()
-
