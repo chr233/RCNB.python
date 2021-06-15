@@ -3,7 +3,7 @@
 # @Author       : Chr_
 # @Date         : 2020-08-25 18:55:16
 # @LastEditors  : Chr_
-# @LastEditTime : 2020-08-26 22:59:51
+# @LastEditTime : 2021-06-15 23:34:28
 # @Description  : RCNB-CORE
 '''
 
@@ -24,7 +24,7 @@ class RCNB():
     __sc = len(__cc)
     __sn = len(__cn)
     __sb = len(__cb)
-    __src = __sr * __sc
+    # __src = __sr * __sc
     __snb = __sn * __sb
     __scnb = __sc * __snb
 
@@ -53,10 +53,13 @@ class RCNB():
         if (i > 0x7FFF):
             reverse = True
             i &= 0x7FFF
-        r= (cls.__cr[i // cls.__scnb], cls.__cc[i % cls.__scnb // cls.__snb],
-            cls.__cn[i % cls.__snb // cls.__sb], cls.__cb[i % cls.__sb])
-        if (reverse):
-            r = r[2],r[3],r[0],r[1]
+        if (not reverse):
+            r = (cls.__cr[i // cls.__scnb], cls.__cc[i % cls.__scnb // cls.__snb],
+                 cls.__cn[i % cls.__snb // cls.__sb], cls.__cb[i % cls.__sb])
+        else:
+            r = (cls.__cn[i % cls.__snb // cls.__sb], cls.__cb[i % cls.__sb],
+                 cls.__cr[i // cls.__scnb], cls.__cc[i % cls.__scnb // cls.__snb])
+            
         return(''.join(r))
 
     @classmethod
@@ -89,11 +92,11 @@ class RCNB():
         reverse = s[0] not in cls.__cr
         try:
             if (not reverse):
-                idx = [cls.__cr.index(s[0]), cls.__cc.index(s[1]),
-                       cls.__cn.index(s[2]), cls.__cb.index(s[3])]
+                idx = (cls.__cr.index(s[0]), cls.__cc.index(s[1]),
+                       cls.__cn.index(s[2]), cls.__cb.index(s[3]))
             else:
-                idx = [cls.__cr.index(s[2]), cls.__cc.index(s[3]),
-                       cls.__cn.index(s[0]), cls.__cb.index(s[1])]
+                idx = (cls.__cr.index(s[2]), cls.__cc.index(s[3]),
+                       cls.__cn.index(s[0]), cls.__cb.index(s[1]))
         except ValueError:
             raise ValueError('not rcnb')
         r = idx[0] * cls.__scnb + idx[1] * \
