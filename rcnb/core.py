@@ -3,7 +3,7 @@
 # @Author       : Chr_
 # @Date         : 2020-08-25 18:55:16
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-06-15 23:35:41
+# @LastEditTime : 2021-06-15 23:38:14
 # @Description  : RCNB-CORE
 '''
 
@@ -59,7 +59,6 @@ class RCNB():
         else:
             r = (cls.__cn[i % cls.__snb // cls.__sb], cls.__cb[i % cls.__sb],
                  cls.__cr[i // cls.__scnb], cls.__cc[i % cls.__scnb // cls.__snb])
-            
         return(''.join(r))
 
     @classmethod
