@@ -33,6 +33,18 @@ print(rcnb.decode("ȐĉņþƦȻƝƃŔć"))
 # RCNB!
 ```
 
+Shell is also support:
+
+```bash
+python3 -m rcnb -e "Who NB?"
+# ȐȼŃƅȓčƞÞƦȻƝƃŖć
+
+python3 -m rcnb -d "ȐĉņþƦȻƝƃŔć"
+# RCNB!
+```
+
+> 输入输出重定向仍然有Bug,正在努力修复
+
   [codacy_b]: https://app.codacy.com/project/badge/Grade/e69b178927b74f5983ba22d403b39551
   [codacy]: https://www.codacy.com/manual/chr233/RCNB.python?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=chr233/RCNB.python&amp;utm_campaign=Badge_Grade
   [pypi_v_b]: https://img.shields.io/pypi/v/rcnb
