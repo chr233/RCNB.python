@@ -3,11 +3,10 @@
 # @Author       : liggest
 # @Date         : 2021-06-15 15:43:00
 # @LastEditors  : Chr_
-# @LastEditTime : 2021-06-15 23:39:15
+# @LastEditTime : 2021-06-15 23:48:13
 # @Description  : RCNB-CLI-USAGE
 '''
 
-import os
 import sys
 import getopt
 from . import encode, decode
